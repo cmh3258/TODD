@@ -50,7 +50,7 @@ angular.module('bobjones', [
     return o;
   }])
 
-  .controller('MainCtrl', ['$scope','EntryService', '$modal', function($scope, EntryService, $modal) 
+  .controller('MainCtrl', ['$scope','EntryService', '$modal','$anchorScroll','$location', function($scope, EntryService, $modal, $anchorScroll, $location) 
   {
     console.log('made it')
     $scope.boards = EntryService.boards;
@@ -78,6 +78,11 @@ angular.module('bobjones', [
       });
 
     };
+
+    $scope.scrollTo = function(id) {
+      $location.hash(id);
+      $anchorScroll();
+   }
 
     var getdate = function()
     {
@@ -125,6 +130,22 @@ angular.module('bobjones', [
         console.log('Modal dismissed at: ' + new Date());
       });
     };
+
+    $scope.editBoardInfo = function()
+    {
+      $scope.editboard = true;
+    }
+
+    $scope.updateBoard = function(board, index)
+    {
+      var new_date = new Date();
+      var date = new_date.toISOString();
+
+      console.log('updating:J ', EntryService.boards[index])
+      $scope.editboard = false
+
+      EntryService.boards[index].date = date;
+    }
 
   }])
 

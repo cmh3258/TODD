@@ -3,18 +3,27 @@
 <div class="row">
   <div class="col-lg-9">
 <div ng-repeat="board in boards">
-  
+  <div id="{{board.name}}"></div>
   <div class="panel panel-default">
   <div class="panel-heading">
     <div class="row">
+
       <div class="col-lg-8">
-        <h1>{{board.name}}</h1>
-        <p>{{board.description}}</p>
-        <p>Created on {{ board.date | date : 'short' : timezone}}</p>
+        <div ng-hide="editboard">
+          <h1>{{board.name}}</h1>
+          <p>{{board.description}}</p>
+          <p>Created on {{ board.date | date : 'short' : timezone}}</p>
+        </div>
+        <div ng-show="editboard">
+          <form class="form-group" ng-submit="updateBoard(board, $index)">
+            <input class="form-control" type="text" ng-model="board.name" style="margin-top:10px"></input>
+            <input placeholder="Description" class="form-control" type="text" ng-model="board.description" style="margin-top:10px"></input>
+            <button style="margin-top:10px" type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
       </div>
       <!--
       <div class="col-lg-6">
-        <!--
         <div ng-controller="EntryCtrl">
           <span class="glyphicon glyphicon-plus-sign" ng-click="showNewEntry(1)" ng-hide="addingEntry"></span>
           <span class="glyphicon glyphicon-minus-sign" ng-click="showNewEntry(0)" ng-show="addingEntry"></span>
@@ -32,7 +41,7 @@
       <div class="col-lg-4">
         <!--<button class="btn btn-default">edit</button>-->
         <button class="btn btn-default" ng-click="open($index)">add item/person</button>
-        <button class="btn btn-default">edit</button>
+        <button class="btn btn-default" ng-click="editBoardInfo()">edit</button>
 
       </div>
     </div>
@@ -89,7 +98,6 @@
   <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
 </form>
 -->
-
 </div>
 <div class="col-md-3">
     <div class="sidenav top2 sidebar-nav-fixed pull-right affix">
@@ -101,8 +109,15 @@
         <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
       </form>
       </div>
-      <h3>Edit All Boards</h3>
-      <h3>Delete Selected</h3>
+      <button class="btn btn-default">Edit All Boards</button>
+      <!--<h3>Delete Selected</h3>-->
+
+      <ul>
+        Go to board
+        <li ng-repeat="board in boards">
+          <button class="btn btn-default" ng-click="scrollTo('{{board.name}}')">{{board.name}}</button>
+        </li>
+      </ul>
     </div>
 </div>
 </div>
