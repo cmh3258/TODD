@@ -1,0 +1,111 @@
+
+<div class="top5"></div>
+<div class="row">
+  <div class="col-lg-9">
+<div ng-repeat="board in boards">
+  
+  <div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-lg-8">
+        <h1>{{board.name}}</h1>
+        <p>{{board.description}}</p>
+        <p>Created on {{ board.date | date : 'short' : timezone}}</p>
+      </div>
+      <!--
+      <div class="col-lg-6">
+        <!--
+        <div ng-controller="EntryCtrl">
+          <span class="glyphicon glyphicon-plus-sign" ng-click="showNewEntry(1)" ng-hide="addingEntry"></span>
+          <span class="glyphicon glyphicon-minus-sign" ng-click="showNewEntry(0)" ng-show="addingEntry"></span>
+          <div ng-show="addingEntry">
+            <h4>Add Entry</h4>
+            <form class="form-group" ng-submit="addEntry($index)">
+              <input placeholder="Name" class="form-control" type="text" ng-model="entry.name" style="margin-top:10px"></input>
+              <input placeholder="Description" class="form-control" type="text" ng-model="entry.description" style="margin-top:10px"></input>
+              <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
+              {{entry}}
+            </form>
+          </div>  
+        </div>
+      </div> -->
+      <div class="col-lg-4">
+        <!--<button class="btn btn-default">edit</button>-->
+        <button class="btn btn-default" ng-click="open($index)">add item/person</button>
+        <button class="btn btn-default">edit</button>
+
+      </div>
+    </div>
+  </div><!-- end panel heading -->
+  
+  <div class="panel-body">
+
+  <div ng-repeat="x in board.entries | orderBy: '-upvotes'">
+    <div class="col-md-4">
+      <div class="entry">
+    <div class="main-entry">
+    <h3>{{x.title}}<span class="smaller">{{x.description}}</span></h3>
+        <p>Created on {{ x.date | date : 'short' : timezone}}</p>
+
+      <span class="glyphicon glyphicon-thumbs-up votes" ng-click="increment(x)">{{x.upvotes}}</span>
+      <div ng-repeat="y in x.comments | orderBy: '-upvotes'" class="comment">
+        <h5>{{y.description}}<span class="name">- {{y.name}}</span></h5>
+        <p>Created on {{ y.date | date : 'short' : timezone}}</p>
+        <span class="glyphicon glyphicon-star-empty votes" ng-click="increment(y)">{{y.upvotes}}</span>
+      </div>
+    </div>
+
+
+    <div  ng-controller="CommentCtrl">
+    <span class="glyphicon glyphicon-plus-sign" ng-click="showNewComment(1)" ng-hide="addingComment"></span>
+    <span class="glyphicon glyphicon-minus-sign" ng-click="showNewComment(0)" ng-show="addingComment"></span>
+    <div ng-show="addingComment">
+    <h4>Add Comment</h4>
+      <form class="form-group" ng-submit="addComment($parent.$parent.$index, $index)">
+        <input placeholder="Name" class="form-control" type="text" ng-model="comment.name" style="margin-top:10px"></input>
+        <input placeholder="Description" class="form-control" type="text" ng-model="comment.description" style="margin-top:10px"></input>
+        <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
+        {{comment}}
+      </form>
+    </div>
+    </div>
+        </div>
+        </div>
+
+  </div>
+
+  
+
+
+
+</div>
+</div>
+</div>
+
+<!--
+<form class="form-group" ng-submit="addBoard()">
+  <input placeholder="Name" class="form-control" type="text" ng-model="board.name" style="margin-top:10px"></input>
+  <input placeholder="Description" class="form-control" type="text" ng-model="board.description" style="margin-top:10px"></input>
+  <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
+</form>
+-->
+
+</div>
+<div class="col-md-3">
+    <div class="sidenav top2 sidebar-nav-fixed pull-right affix">
+      <button ng-click="istrue = !istrue" class="btn btn-default">Add board</button>
+      <div ng-show="istrue">
+      <form class="form-group" ng-submit="addBoard()">
+        <input placeholder="Name" class="form-control" type="text" ng-model="board.name" style="margin-top:10px"></input>
+        <input placeholder="Description" class="form-control" type="text" ng-model="board.description" style="margin-top:10px"></input>
+        <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      </div>
+      <h3>Edit All Boards</h3>
+      <h3>Delete Selected</h3>
+    </div>
+</div>
+</div>
+
+
+

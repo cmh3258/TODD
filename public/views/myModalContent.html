@@ -1,0 +1,32 @@
+
+<tabset class="addpopup">
+    
+    <tab heading="Add Item">
+        <div class="modal-header">
+            <h3 class="modal-title">Item</h3>
+        </div>
+        <div class="modal-body">
+            <form ng-submit="addEntry(item)">
+                <input placeholder="name" class="form-control" type="text" ng-model="item.name"/>
+                <input placeholder="description" class="form-control" type="text" ng-model="item.desc"/>
+                <button class="btn btn-default btn-success">Submit</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <!--<button class="btn btn-primary" ng-click="ok()">OK</button>-->
+            <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        </div>
+    </tab>
+    <tab heading="Add Person">
+        <div class="modal-header">
+            <h3 class="modal-title">Person</h3>
+        </div>
+        <div class="modal-body">
+            <h3>None to select. Coming Soon!</h3>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </tab>
+</tabset>
