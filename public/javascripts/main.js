@@ -8,21 +8,22 @@ angular.module('bobjones', [
     'ngTouch', 
     'ui.bootstrap',
     'ngAria',
-    'ngMaterial'
+    'ngMaterial', 
+    'ngFlowGrid'
   ])
   
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/home', {
-        templateUrl: '/views/main.html',
+      .when('/', {
+        templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+      .when('/explore/', {
+        templateUrl: 'views/explore.html',
+        controller: 'ExploreCtrl'
       })
       .otherwise({
-        redirectTo: '/home'
+        redirectTo: '/'
       });
   })
 
@@ -52,7 +53,7 @@ angular.module('bobjones', [
 
   .controller('MainCtrl', ['$scope','EntryService', '$modal','$anchorScroll','$location', function($scope, EntryService, $modal, $anchorScroll, $location) 
   {
-    console.log('made it')
+    console.log('Loading MainCtrl.')
     $scope.boards = EntryService.boards;
 
     $scope.awesomeThings = [
@@ -60,6 +61,14 @@ angular.module('bobjones', [
       'AngularJS',
       'Karma'
     ];
+
+    $scope.explore = function()
+    {
+      $location.path('/explore');
+    }
+
+
+
 
     $scope.addBoard = function()
     {

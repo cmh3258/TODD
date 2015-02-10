@@ -43,4 +43,27 @@ padding: 1em;}
 
 .bottomout{margin-top:20em;}
 
+/* Explore */
+.explore-list li{display: inline;}
+/*
+	Grid Style
+*/	
+.flowGrid{position: relative;padding: 0;margin-top: 5em;}
+    .flowGrid:before,.flowGrid:after{
+        content: "";
+        display: table;
+    }
+    .flowGrid:after{
+        clear:both;
+    }
+    .flowGridItem{ list-style: none; padding:4px;}
+    .flowGridItem img{width:100%;}
+    .flowGridColumn{
+        float: left;
+        padding-left: 10px;
+    }
+    .flowGridColumn:last-of-type{
+        padding-right: 10px;
+    }
+
 

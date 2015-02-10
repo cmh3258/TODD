@@ -1,0 +1,85 @@
+
+<div class="top5"></div>
+
+<h1> Explore </h1>
+
+<div collapse="isCollapsed8">
+    <div class="exploresection">
+    <div class="well well-lg top57 explore-fix">
+        <ul class="explore-list">
+        <li ng-repeat="option in selections">
+            <button type="button" class="btn white-color" ng-click="searchSections(option, $index)" ng-class="{active: $index == selectedone}">
+                <span class="icon-foursquare"><img src="images/foursquare-icon16.png"/></span>
+                {{option}}
+            </button>
+        </li>
+        </ul>
+    </div>
+    </div> 
+</div>
+
+
+<div class="container">
+    <ul class="flowGrid" ng-flow-grid="homePageGir" min-item-width="200">
+      <li class="flowGridItem" ng-repeat="place in finalarry">
+          <!--<a href=""><img ng-src="{{iteme.newphoto}}"></a>
+          <p>{{iteme.name}}</p>-->
+
+          <div class="explore-item-container background-white">
+                <!--<h5>{{place}}</h5>-->
+                <!--<h4>venue: {{place.venue}}</h4>-->
+                <div class="place-box"  ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
+                    <img src="{{place.newphoto}}" alt="place photo" class="main-photo" />
+                    <div class="picture-btns">
+                    <!-- ng-show="shouldshow" -->
+                        <button class="btn btn-default" ng-show="shouldshow" ng-click="addevent(place)">add</button>
+                        <button class="btn btn-default" ng-show="shouldshow" ng-click="showthemore = !showthemore; moreinfo2(place)">more</button>
+                    </div>
+                    <!--ng-click="moreinfo($event, place)"-->
+                    <div class="inner-place-box">
+                        <h3 class="item-name">{{place.name}}</h3>
+                        <h5 class="item-category">{{place.categories[0].name}}</h5>
+                        <div ng-show="showthemore">
+
+                            <div class="">
+                                    <h5 class="item-url"><a href="{{place.venue.url}}">{{place.url}}</a></h5>
+                                    <h4><a href="{{moreInfoLink}}">more info</a></h4>
+                                    <h5>is open? {{place.hours.isOpen}}</h5>
+                                    <h5>status {{place.hours.status}}</h5>
+                                    <h5>contact : {{place.contact.phone}}</h5>
+                                    <h5>rating :{{place.rating}}</h5>
+
+                                    <div ng-repeat="x in place.tips">
+                                        <h5>likes: {{x.likes.count}}</h5>
+                                        <h5>text: {{x.text}}</h5>
+                                    </div>
+                                    
+                                    <h5>{{place.location.lat}}</h5>
+                                    <h5>{{place.location.lng}}</h5>
+
+                                    <div ng-repeat="x in place.location.formattedAddress">
+                                        <h5 class="item-address">{{x}}</h5>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-info-box">
+                    <div class="box-color-{{place.hours.isOpen}}">
+                        <!--<h5 class="left12">{{place.venue.hours.status}}</h5>-->
+                    </div>
+                    <!--
+                    <div class="pad5">
+                        <div ng-repeat="x in place.tips">
+                            <div class="circle-it">
+                            <h5>{{x.likes.count}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+
+      </li>
+    </ul>
+</div>
