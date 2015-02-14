@@ -14,7 +14,7 @@ angular.module('bobjones', [
   
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
+      .when('/myboards/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
@@ -23,7 +23,7 @@ angular.module('bobjones', [
         controller: 'ExploreCtrl'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/myboards/'
       });
   })
 
@@ -34,7 +34,8 @@ angular.module('bobjones', [
         name: 'First Board',
         description: 'sampling desc board',
         date:'',
-        entries : [{
+        entries : [
+        {
           title:'test', 
           description:'new desc', 
           upvotes:0, 
@@ -45,13 +46,24 @@ angular.module('bobjones', [
             upvotes:0,
             date:''
           }]
+        },
+        {
+          title:'hello there', 
+          description:'I am a description', 
+          upvotes:0, 
+          date: '',
+          comments:[{
+            name:'joshnny',
+            description:'test comment',
+            upvotes:0,
+            date:''
+          }]
         }]
-      }]
-    };
+    }]};
     return o;
   }])
 
-  .controller('MainCtrl', ['$scope','EntryService', '$modal','$anchorScroll','$location', function($scope, EntryService, $modal, $anchorScroll, $location) 
+  .controller('MainCtrl', ['$scope','EntryService', '$modal','$anchorScroll','$location','fgDelegate',function($scope, EntryService, $modal, $anchorScroll, $location,fgDelegate) 
   {
     console.log('Loading MainCtrl.')
     $scope.boards = EntryService.boards;
@@ -62,12 +74,22 @@ angular.module('bobjones', [
       'Karma'
     ];
 
+    $scope.reload = function()
+        {
+            $scope.$watch('$last',function(){
+                fgDelegate.getFlow('homePageGird').itemsChanged();
+            });
+        }
+
     $scope.explore = function()
     {
-      $location.path('/explore');
+      $location.path('/explore/');
     }
 
-
+    $scope.boardsGet = function()
+    {
+      $location.path('/myboards/');
+    }
 
 
     $scope.addBoard = function()
@@ -85,7 +107,7 @@ angular.module('bobjones', [
         date: date,
         entries: []
       });
-
+      $scope.reload()
     };
 
     $scope.scrollTo = function(id) {

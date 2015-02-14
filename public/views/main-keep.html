@@ -49,14 +49,7 @@
   
   <div class="panel-body">
 
-  <!--<div ng-repeat="x in board.entries | orderBy: '-upvotes'">-->
-    <ul class="flowGrid" ng-flow-grid="homePageGird" min-item-width="200">
-        <li ng-repeat="x in board.entries | orderBy: '-upvotes'" class="flowGridItem">
-            <a href=""><img ng-src="{{item.img}}"></a>
-            <h2>{{x.title}}</h2>
-        </li>
-    </ul>
-    <!--
+  <div ng-repeat="x in board.entries | orderBy: '-upvotes'">
     <div class="col-md-4">
       <div class="entry">
     <div class="main-entry">
@@ -89,9 +82,13 @@
         </div>
 
   </div>
-  -->
-<!-- </div>
- --></div>
+
+  
+
+
+
+</div>
+</div>
 </div>
 
 <!--
@@ -101,7 +98,6 @@
   <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
 </form>
 -->
-</div>
 </div>
 <div class="col-md-3">
     <div class="sidenav top2 sidebar-nav-fixed pull-right affix">
