@@ -45,6 +45,7 @@ padding: 1em;}
 
 /* Explore */
 .explore-list li{display: inline;}
+
 /*
 	Grid Style
 */	
@@ -66,4 +67,6 @@ padding: 1em;}
         padding-right: 10px;
     }
 
+
+.explore-item-container{border:1px solid black;}
 

@@ -51,9 +51,37 @@
 
   <!--<div ng-repeat="x in board.entries | orderBy: '-upvotes'">-->
     <ul class="flowGrid" ng-flow-grid="homePageGird" min-item-width="200">
-        <li ng-repeat="x in board.entries | orderBy: '-upvotes'" class="flowGridItem">
+        <li ng-repeat="x in board.entries" class="flowGridItem">
+          <!-- | orderBy: '-upvotes' -->
+            <div class="explore-item-container background-white">
+
             <a href=""><img ng-src="{{item.img}}"></a>
             <h2>{{x.title}}</h2>
+            <h4>{{x.description}}</h4>
+            <p>Created on {{ x.date | date : 'short' : timezone}}</p>
+
+            <span class="glyphicon glyphicon-thumbs-up votes" ng-click="increment(x)">{{x.upvotes}}</span>
+            <div ng-repeat="y in x.comments | orderBy: '-upvotes'" class="comment">
+              <h5>{{y.description}}<span class="name">- {{y.name}}</span></h5>
+              <p>Created on {{ y.date | date : 'short' : timezone}}</p>
+              <span class="glyphicon glyphicon-star-empty votes" ng-click="increment(y)">{{y.upvotes}}</span>
+            </div>
+
+            <div  ng-controller="CommentCtrl">
+              <span class="glyphicon glyphicon-plus-sign" ng-click="showNewComment(1)" ng-hide="addingComment"></span>
+              <span class="glyphicon glyphicon-minus-sign" ng-click="showNewComment(0)" ng-show="addingComment"></span>
+              <div ng-show="addingComment">
+                <h4>Add Comment</h4>
+                <form class="form-group" ng-submit="addComment($parent.$parent.$index, $index)">
+                  <input placeholder="Name" class="form-control" type="text" ng-model="comment.name" style="margin-top:10px"></input>
+                  <input placeholder="Description" class="form-control" type="text" ng-model="comment.description" style="margin-top:10px"></input>
+                  <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
+                  {{comment}}
+                </form>
+              </div>
+            </div>
+
+            </div> 
         </li>
     </ul>
     <!--

@@ -6,10 +6,23 @@
             <h3 class="modal-title">Item</h3>
         </div>
         <div class="modal-body">
-            <form ng-submit="addEntry(item)">
+            <form>
                 <input placeholder="name" class="form-control" type="text" ng-model="item.name"/>
-                <input placeholder="description" class="form-control" type="text" ng-model="item.desc"/>
-                <button class="btn btn-default btn-success">Submit</button>
+                <input placeholder="description" class="form-control" type="text" ng-model="item.description"/>
+                
+                <input placeholder="website url" class="form-control" type="text" ng-model="item.website"/>
+                <input placeholder="user name" class="form-control" type="text" ng-model="item.user_created"/>
+
+                <button class="btn btn-default" ng-click="showLocation = !showLocation">Add Location</button>
+
+                <div ng-show="showLocation">
+                    <input placeholder="address" class="form-control" type="text" ng-model="item.location.address"/>
+                    <input placeholder="city" class="form-control" type="text" ng-model="item.location.city"/>
+                    <input placeholder="zip" class="form-control" type="text" ng-model="item.location.zip"/>
+                    <input placeholder="state" class="form-control" type="text" ng-model="item.location.state"/>
+                </div>
+
+                <button class="btn btn-default btn-success" ng-click="addEntry(item)">Submit</button>
             </form>
         </div>
         <div class="modal-footer">
@@ -17,7 +30,7 @@
             <button class="btn btn-default" ng-click="cancel()">Cancel</button>
         </div>
     </tab>
-    <tab heading="Add Person">
+    <!-- <tab heading="Add Person">
         <div class="modal-header">
             <h3 class="modal-title">Person</h3>
         </div>
@@ -28,5 +41,5 @@
             <button class="btn btn-primary" ng-click="ok()">OK</button>
             <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
         </div>
-    </tab>
+    </tab> -->
 </tabset>

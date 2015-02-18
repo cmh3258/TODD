@@ -34,12 +34,25 @@ angular.module('bobjones', [
         name: 'First Board',
         description: 'sampling desc board',
         date:'',
+        id:0,
         entries : [
         {
           title:'test', 
           description:'new desc', 
           upvotes:0, 
           date: '',
+          provider_link: '',
+          website: '',
+          location : {
+            address: '',
+            city: '',
+            zip: '',
+            latit: 0,
+            longit: 0,
+            state: ''
+          },
+          user_created: '',
+          board_id: 0,
           comments:[{
             name:'bob',
             description:'test comment',
@@ -52,6 +65,18 @@ angular.module('bobjones', [
           description:'I am a description', 
           upvotes:0, 
           date: '',
+          provider_link: '',
+          website: '',
+          location : {
+            address: '',
+            city: '',
+            zip: '',
+            latit: 0,
+            longit: 0,
+            state: ''
+          },
+          user_created: '',
+          board_id: 0,
           comments:[{
             name:'joshnny',
             description:'test comment',
@@ -101,11 +126,14 @@ angular.module('bobjones', [
       var new_date = new Date();
       var date = new_date.toISOString();
 
+      new_id = boards.length
+
       EntryService.boards.push({
         name: board.name,
         description: board.description,
         date: date,
-        entries: []
+        entries: [],
+        id:new_id
       });
       $scope.reload()
     };
@@ -137,6 +165,7 @@ angular.module('bobjones', [
     $scope.increment = function(entry)
     {
       entry.upvotes += 1;
+      //$scope.reload()
     };
 
       $scope.items = ['item1', 'item2', 'item3'];
@@ -149,6 +178,10 @@ angular.module('bobjones', [
         controller: 'EntryCtrl',
         size: 'sm',
         resolve: {
+          type: function()
+            {
+                return 'boards'
+            },
           items: function () {
             return index;
           }
@@ -184,9 +217,11 @@ angular.module('bobjones', [
 /*
 * Pop up controller
 */
-.controller('EntryCtrl', function ($scope, $modalInstance, items, EntryService) {
+.controller('EntryCtrl', function ($scope, $modalInstance, type, items, EntryService, fgDelegate) {
 
   var index = items;
+
+  $scope.boards = EntryService.boards
 
   /*
   $scope.ok = function () {
@@ -197,25 +232,144 @@ angular.module('bobjones', [
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-  
 
+  $scope.reload = function()
+  {
+      $scope.$watch('$last',function(){
+          fgDelegate.getFlow('homePageGird').itemsChanged();
+      });
+  }
+  
+/*
+$$hashKey: "object:20"
+categories: Array[1]
+contact: Object
+featuredPhotos: Object
+hereNow: Object
+hours: Object
+id: "49be75ccf964a520ad541fe3"
+location: Object
+name: "Torchy's Tacos"
+newphoto: "https://irs2.4sqi.net/img/general/300x200/7501585_Opn1Zv7d238pgPtE_rlt123UInlRg63uFp1oGx4JJ7U.jpg"
+photos: Object
+price: Object
+rating: 9.6
+ratingColor: "00B551"rating
+Signals: 449
+specials: Object
+stats: Object
+storeId: ""url: "http://www.torchystacos.com"
+verified: true
+*/
   $scope.addEntry = function(entry)
       {
         console.log('entry ', entry)
 
+        var new_date = new Date();
+        var date = new_date.toISOString();
+        /*
+        title:'test', 
+          description:'new desc', 
+          upvotes:0, 
+          date: '',
+          provider_link: '',
+          website: '',
+          location : {
+            address: '',
+            city: '',
+            zip: '',
+            latit: 0,
+            longit: 0,
+            state: ''
+          },
+          user_created: '',
+          board_id: 0,
+        */
+
+        if(type=='explore')
+        {
+          console.log('explore == item: ', items)
+          index = entry.board.id
+          new_entry = {}
+          new_entry.title = items.name
+          new_entry.description = items.categories[0].name
+          new_entry.provider_link = items.link
+          new_entry.website = items.url
+          new_entry.upvotes = 0
+          new_entry.date = date
+          new_entry.comments = []
+
+          new_entry.location = {}          
+          new_entry.location.address = items.location.address
+          new_entry.location.city = items.location.city
+          new_entry.location.zip = items.location.postalCode
+          new_entry.location.latit = items.location.lat
+          new_entry.location.longit = items.location.lng
+          new_entry.location.state = items.location.state
+          new_entry.user_created = entry.item.user_created
+          new_entry.board_id = index
+          entry = new_entry
+        }
+        else
+        {
+          console.log('else find: ', entry)
+          new_entry = {}
+          new_entry.title = entry.name
+          new_entry.description = entry.description
+          new_entry.provider_link = ''
+          new_entry.website = entry.url
+          new_entry.upvotes = 0
+          new_entry.date = date
+          new_entry.comments = []
+          new_entry.location = {}          
+
+          if(entry.location !== undefined)
+          {
+            new_entry.location.address = entry.location.address
+            new_entry.location.city = entry.location.city
+            new_entry.location.zip = entry.location.postalCode
+            new_entry.location.latit = entry.location.lat
+            new_entry.location.longit = entry.location.lng
+            new_entry.location.state = entry.location.state
+          }
+          new_entry.user_created = entry.user_created
+          new_entry.board_id = index
+          entry = new_entry
+
+          console.log('E: ', entry)
+
+        }
+
         /*console.log('ent: ', EntryService.entries);
         console.log('id ', id, ' entry: ', entry);
         */
-        var new_date = new Date();
-        var date = new_date.toISOString();
+        
 
-        EntryService.boards[index].entries.push({
+        EntryService.boards[index].entries.push(
+          entry
+          /*{
           title: entry.name,
           description: entry.description,
           upvotes: 0,
           date: date,
-          comments: []
-        });
+          comments: [],
+          provider_link: entry.provider_link,
+          website: entry.website,
+          location : {
+            address: entry.location.address,
+            city: entry.location.city,
+            zip: entry.location.zip,
+            latit: entry.location.lat,
+            longit: entry.location.lng,
+            state: entry.location.state
+          },
+          user_created: entry.user_created,
+          board_id: entry.board_id,
+        }*/
+        );
+
+        if(type != 'explore')
+          $scope.reload()
       
         $modalInstance.close();
 

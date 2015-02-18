@@ -1,7 +1,7 @@
 
 angular.module('bobjones')
 
-.controller('ExploreCtrl',['$scope','fgDelegate', 'foursquare', function ($scope, fgDelegate, foursquare)
+.controller('ExploreCtrl',['$scope','fgDelegate', 'foursquare','$modal', function ($scope, fgDelegate, foursquare, $modal)
 {
 
     $scope.hellobob = "Hello bob"
@@ -149,6 +149,8 @@ $scope.itemsNew1 = [
             //console.log(thephoto)
             items[i].venue["newphoto"] = thephoto
 
+            items[i].venue["link"] = "http://foursquare.com/v/" + items[i].venue.id
+
             //var status = items[i].venue.hours.isOpen
             var status = false
             //var closed = items[i].venue.hours.status
@@ -170,10 +172,33 @@ $scope.itemsNew1 = [
         this.shouldshow = false;
     };
 
-    $scope.addevent = function(event)
+    $scope.addevent = function(item)
     {
-        console.log('addevent ', event)
+        var index = 0
+        console.log('explore addevent ', item)
+
+        var modalInstance = $modal.open({
+        templateUrl: '/views/exploreAdd.html',
+        controller: 'EntryCtrl',
+        size: 'sm',
+        resolve: {
+            type: function()
+            {
+                return 'explore'
+            },
+              items: function () {
+                return item;
+              }
+            }
+          });
+
+          modalInstance.result.then(function (selectedItem) {
+            $scope.selected = selectedItem;
+          }, function () {
+            console.log('Modal dismissed at: ' + new Date());
+          });
     }
+
 
     $scope.newEvent = function(item)
     {
@@ -205,6 +230,7 @@ $scope.itemsNew1 = [
 
     $scope.moreinfo2 = function(place){
         $scope.moreInfoLink = "http://foursquare.com/v/" + place.id
+        place.moreInfoLink = $scope.moreInfoLink
     }
 
 
