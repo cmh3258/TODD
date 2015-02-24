@@ -1,7 +1,27 @@
 
 angular.module('bobjones')
 
-.controller('ExploreCtrl',['$scope','fgDelegate', 'foursquare','$modal', function ($scope, fgDelegate, foursquare, $modal)
+.factory('LocationService', function ($http)
+{
+    var user = 
+    {
+        lat:"",
+        lng:"",
+        isSet:false
+    }
+
+    user.returnLocation = function()
+    {
+        if(user.lat != "" && user.lng != "")
+            return {lat: user.lat, lng: user.lng}
+        else
+            return false
+    }
+
+    return user;
+})
+
+.controller('ExploreCtrl',['$scope','fgDelegate', 'foursquare','$modal','LocationService', function ($scope, fgDelegate, foursquare, $modal, LocationService)
 {
 
     $scope.hellobob = "Hello bob"
@@ -23,6 +43,51 @@ angular.module('bobjones')
         "topPicks",
         "custom"
     ]
+
+    $scope.showco = false;
+    $scope.hidmain = true;
+    $scope.myaddress = null;
+
+    $scope.myaddress = "none"
+
+
+    var getgeolocation = function()
+    {
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+        function showPosition(position) {
+            console.log('here')
+            $scope.$apply(function() {
+                $scope.myaddress = {"lat":position.coords.latitude, "lng":position.coords.longitude};
+                LocationService.lat =  position.coords.latitude
+                LocationService.lng =  position.coords.longitude
+                LocationService.isSet = true
+            })
+        }
+    }
+
+    //checking to see if location is already set, will check in user in v2
+        //will need to be able to change/pick a place 
+    if(LocationService.isSet == false)
+    {
+        var coords = getgeolocation();
+        $scope.$watch(function($scope){ return $scope.myaddress}, 
+            function(newValue, oldValue){
+                if(newValue.lat)
+                    firstexplore();
+                $scope.myaddress = newValue;
+                
+            }
+        )
+    }
+    else
+    {
+        $scope.myaddress = LocationService.returnLocation()
+    }
 
     $scope.searchSections = function(section, index)
     {
@@ -99,43 +164,46 @@ angular.module('bobjones')
             });
         }
 
-    foursquare.exploreTopVenues()
-        .success(function (data) 
-        {
-           $scope.newData = data.response.venues
-           var items = data.response.groups[0].items
-            items = itemEditing(items)
-           //$scope.exploreFoodData = items
-           console.log('bob ' ,$scope.exploreFoodData)
-           var finalarry = []
-           for(var j = 0; j < items.length; j++)
-           {    
-            finalarry.push(items[j].venue)
-           }
-           $scope.finalarry = finalarry
-           //getPhotos($scope.exploreFoodData)
-            //fgDelegate.getFlow('demoGird2').refill(true);
-            //fgDelegate.getFlow('demoGird2').itemsChanged();
-$scope.itemsNew1 = [
-        {
-            imag:'http://placehold.it/300x600/E97452/fff',
-            name:'Lorem ipsum dolor sit amet',
-        },
-        {
-            imag:'http://placehold.it/300x300/4C6EB4/fff',
-            name:'Lorem ipsum dolor sit amet',
-        },
-        {
-            imag:'http://placehold.it/300x250/449F93/fff',
-            name:'Lorem ipsum dolor sit amet',
-        }]
-        $scope.$watch('$last',function(){
-                fgDelegate.getFlow('homePageGir').itemsChanged();
+    var firstexplore = function()
+    {
+        foursquare.exploreTopVenues()
+            .success(function (data) 
+            {
+               $scope.newData = data.response.venues
+               var items = data.response.groups[0].items
+                items = itemEditing(items)
+               //$scope.exploreFoodData = items
+               console.log('bob ' ,$scope.exploreFoodData)
+               var finalarry = []
+               for(var j = 0; j < items.length; j++)
+               {    
+                finalarry.push(items[j].venue)
+               }
+               $scope.finalarry = finalarry
+               //getPhotos($scope.exploreFoodData)
+                //fgDelegate.getFlow('demoGird2').refill(true);
+                //fgDelegate.getFlow('demoGird2').itemsChanged();
+            /*$scope.itemsNew1 = [
+            {
+                imag:'http://placehold.it/300x600/E97452/fff',
+                name:'Lorem ipsum dolor sit amet',
+            },
+            {
+                imag:'http://placehold.it/300x300/4C6EB4/fff',
+                name:'Lorem ipsum dolor sit amet',
+            },
+            {
+                imag:'http://placehold.it/300x250/449F93/fff',
+                name:'Lorem ipsum dolor sit amet',
+            }]*/
+            $scope.$watch('$last',function(){
+                    fgDelegate.getFlow('homePageGir').itemsChanged();
+                });
+            })
+            .error(function(error){
+                alert('exploreTopVenues: ', error.message)
             });
-        })
-        .error(function(error){
-            alert('exploreTopVenues: ', error.message)
-        });
+    }
 
 
     var itemEditing = function(items)
