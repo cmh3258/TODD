@@ -12,7 +12,7 @@
         <div ng-hide="editboard">
           <h1>{{board.name}}</h1>
           <p>{{board.description}}</p>
-          <p>Created on {{ board.date | date : 'short' : timezone}}</p>
+          <p>Created on {{ board.created_at | date : 'short' : timezone}}</p>
         </div>
         <div ng-show="editboard">
           <form class="form-group" ng-submit="updateBoard(board, $index)">

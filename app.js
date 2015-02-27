@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/todd1');
 
+require('./models/Boards');
 require('./models/Entries');
 require('./models/Comments');
+
 
 var express = require('express');
 var path = require('path');

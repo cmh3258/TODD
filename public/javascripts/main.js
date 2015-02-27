@@ -16,7 +16,12 @@ angular.module('bobjones', [
     $routeProvider
       .when('/myboards/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        controller: 'MainCtrl',
+        resolve: {
+          boards: ['EntryService', function (EntryService) {
+              return EntryService.getAllBoards();
+            }]
+        }
       })
       .when('/explore/', {
         templateUrl: 'views/explore.html',
@@ -27,9 +32,9 @@ angular.module('bobjones', [
       });
   })
 
-  .factory('EntryService', [function()
+  .factory('EntryService', ['$http', function ($http)
   {
-    var o = {
+    /*var o = {
       boards:[{
         name: 'First Board',
         description: 'sampling desc board',
@@ -84,7 +89,37 @@ angular.module('bobjones', [
             date:''
           }]
         }]
-    }]};
+    }]};*/
+    var o = {
+      boards:[]
+    };
+
+    o.getEntries = function(boardid){
+      return $http.get('/boards/' + boardid)
+    }
+
+    o.getAllBoards = function(){
+      return $http.get('/boards').success(function(data){
+        angular.copy(data, o.boards)
+      });
+    };
+
+    o.createBoard = function(board){
+      return $http.post('/boards', board).success(function(data){
+        o.boards.push(data);
+      });
+    };
+
+    o.addEntry = function(boardid, entry){
+      console.log('boardid ', boardid)
+      console.log('boardid ', entry)
+      //   /boards/:board/entries
+      entry = {title: "test1",description: "desc1",}
+      return $http.post('/boards/' + boardid + '/entries', entry)
+    };
+
+
+
     return o;
   }])
 
@@ -126,8 +161,15 @@ angular.module('bobjones', [
       var new_date = new Date();
       var date = new_date.toISOString();
 
-      new_id = boards.length
+      new_id = EntryService.boards.length
 
+      EntryService.createBoard({
+        name: board.name,
+        description: board.description,
+        created_at: date,
+        updated_at: date,
+      })
+      /*
       EntryService.boards.push({
         name: board.name,
         description: board.description,
@@ -135,7 +177,9 @@ angular.module('bobjones', [
         entries: [],
         id:new_id
       });
+      */
       $scope.reload()
+
     };
 
     $scope.scrollTo = function(id) {
@@ -344,7 +388,7 @@ verified: true
         console.log('id ', id, ' entry: ', entry);
         */
         
-
+        /*
         EntryService.boards[index].entries.push(
           entry
           /*{
@@ -366,7 +410,11 @@ verified: true
           user_created: entry.user_created,
           board_id: entry.board_id,
         }*/
-        );
+        //);
+
+        console.log('the boarfds: ', EntryService.boards)
+
+        EntryService.addEntry(EntryService.boards[index]._id, entry);
 
         if(type != 'explore')
           $scope.reload()
