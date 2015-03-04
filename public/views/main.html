@@ -58,7 +58,8 @@
             <a href=""><img ng-src="{{item.img}}"></a>
             <h2>{{x.title}}</h2>
             <h4>{{x.description}}</h4>
-            <p>Created on {{ x.date | date : 'short' : timezone}}</p>
+            <h5>- {{x.user_created}}</h5>
+            <p>Created on {{ x.created_at | date : 'short' : timezone}}</p>
 
             <span class="glyphicon glyphicon-thumbs-up votes" ng-click="increment(x)">{{x.upvotes}}</span>
             <div ng-repeat="y in x.comments | orderBy: '-upvotes'" class="comment">

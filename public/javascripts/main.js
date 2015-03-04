@@ -94,14 +94,28 @@ angular.module('bobjones', [
       boards:[]
     };
 
-    o.getEntries = function(boardid){
-      return $http.get('/boards/' + boardid)
-    }
+
 
     o.getAllBoards = function(){
       return $http.get('/boards').success(function(data){
-        angular.copy(data, o.boards)
+        //angular.copy(data, o.boards);
+        new_entries = []
+        for (var i = 0; i < data.length; i++)
+        {
+          //console.log('[getAllBoards] ', o.boards[i])
+          o.getEntries(data[i]._id).then(function(new_data){
+            //console.log('new_data: ', new_data)
+            o.boards.push(new_data);
+          })
+        }
+        //console.log('new_entries: ', new_entries)
       });
+    };
+
+    o.getEntries = function(boardid){
+      return $http.get('/boards/' + boardid).then(function(res){
+        return res.data
+      })
     };
 
     o.createBoard = function(board){
@@ -113,9 +127,23 @@ angular.module('bobjones', [
     o.addEntry = function(boardid, entry){
       console.log('boardid ', boardid)
       console.log('boardid ', entry)
+      
       //   /boards/:board/entries
-      entry = {title: "test1",description: "desc1",}
-      return $http.post('/boards/' + boardid + '/entries', entry)
+      return $http.post('/boards/' + boardid + '/entries', entry).success(function(data){
+        //console.log('addentry: ', data)
+        //console.log('boards->: ', o.boards)
+        //o.boards
+        for(var i=0; i < o.boards.length; i++)
+        {
+          if (data.board == o.boards[i]._id)
+          {
+            o.boards[i].entries.push(data);
+            console.log('factory done.')
+            return true;
+          }
+        }
+        return false;
+      })
     };
 
 
@@ -136,6 +164,7 @@ angular.module('bobjones', [
 
     $scope.reload = function()
         {
+          console.log('should reload')
             $scope.$watch('$last',function(){
                 fgDelegate.getFlow('homePageGird').itemsChanged();
             });
@@ -224,7 +253,7 @@ angular.module('bobjones', [
         resolve: {
           type: function()
             {
-                return 'boards'
+              return 'boards'
             },
           items: function () {
             return index;
@@ -255,6 +284,8 @@ angular.module('bobjones', [
       EntryService.boards[index].date = date;
     }
 
+
+
   }])
 
 
@@ -266,6 +297,8 @@ angular.module('bobjones', [
   var index = items;
 
   $scope.boards = EntryService.boards
+
+ 
 
   /*
   $scope.ok = function () {
@@ -279,6 +312,7 @@ angular.module('bobjones', [
 
   $scope.reload = function()
   {
+    console.log('should reload')
       $scope.$watch('$last',function(){
           fgDelegate.getFlow('homePageGird').itemsChanged();
       });
@@ -413,11 +447,35 @@ verified: true
         //);
 
         console.log('the boarfds: ', EntryService.boards)
+        console.log('entry being saved: ', entry)
+        
+        EntryService.addEntry(EntryService.boards[index]._id, entry).then(function(results){
+          console.log('results: ', results)
+          //$scope.reload();
 
-        EntryService.addEntry(EntryService.boards[index]._id, entry);
 
-        if(type != 'explore')
+
+        })
+        
+        /*
+        $scope.$watch(function($scope){ return $scope.boards[index]._id}, 
+            function(newValue, oldValue){
+              console.log(' absc; ', newValue , ' : ', oldValue); 
+              if (newValue !== undefined) 
+              {
+                console.log('reloaded')
+                $scope.reload();
+              } 
+            }
+        )
+        */  
+
+        /*
+        if(type != 'explore'){
+          console.log('should get here!')
           $scope.reload()
+        }
+        */
       
         $modalInstance.close();
 
