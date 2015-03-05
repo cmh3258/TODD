@@ -14,10 +14,8 @@ router.get('/', function(req, res) {
 
 //get all boards
 router.get('/boards', function(req, res, next){
-	Board.find(function(err, boards){
+	Board.find({}).populate('entries').exec(function(err, boards){
 		if(err){ return next(err);}
-
-		console.log('boards: ', boards)
 		/*
 		for(var i=0; i< boards.length; i++)
 		{

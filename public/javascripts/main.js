@@ -98,8 +98,8 @@ angular.module('bobjones', [
 
     o.getAllBoards = function(){
       return $http.get('/boards').success(function(data){
-        //angular.copy(data, o.boards);
-        new_entries = []
+        angular.copy(data, o.boards);
+        /*new_entries = []
         for (var i = 0; i < data.length; i++)
         {
           //console.log('[getAllBoards] ', o.boards[i])
@@ -108,7 +108,9 @@ angular.module('bobjones', [
             o.boards.push(new_data);
           })
         }
+
         //console.log('new_entries: ', new_entries)
+        */
       });
     };
 
@@ -366,15 +368,25 @@ verified: true
 
         if(type=='explore')
         {
-          console.log('explore == item: ', items)
-          index = entry.board.id
+          console.log('explore == item: ', entry.board)
+          for(var i = 0; i < $scope.boards.length ; i++)
+          {
+            if (entry.board._id == $scope.boards[i]._id)
+            {
+              console.log(entry.board._id , ' : ', $scope.boards[i]._id)
+              break;
+            }
+          }
+          console.log('i: ', i)
+
+          index = i;
           new_entry = {}
           new_entry.title = items.name
           new_entry.description = items.categories[0].name
           new_entry.provider_link = items.link
           new_entry.website = items.url
           new_entry.upvotes = 0
-          new_entry.date = date
+          new_entry.created_at = date
           new_entry.comments = []
 
           new_entry.location = {}          
@@ -385,7 +397,6 @@ verified: true
           new_entry.location.longit = items.location.lng
           new_entry.location.state = items.location.state
           new_entry.user_created = entry.item.user_created
-          new_entry.board_id = index
           entry = new_entry
         }
         else
@@ -397,7 +408,7 @@ verified: true
           new_entry.provider_link = ''
           new_entry.website = entry.url
           new_entry.upvotes = 0
-          new_entry.date = date
+          new_entry.created_at = date
           new_entry.comments = []
           new_entry.location = {}          
 
